@@ -1,0 +1,10 @@
+//
+//  .gitignore
+//  My_Birdle
+//
+//  Created by KimChhay Leng on 5/11/2025.
+//
+
+# Xcode user-specific files
+xcuserdata/
+*.xcuserstate
