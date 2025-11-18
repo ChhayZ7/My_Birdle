@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>easterbilby.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Birdle needs to save bird photos to your library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Birdle needs access to your photo library to select bird photos for uploads.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Birdle needs to access to your camera to take photos of birds for uploads.</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleDisplayName</key>
+	<string>Birdle</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+</dict>
+</plist>
