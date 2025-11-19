@@ -39,6 +39,11 @@ struct PuzzleView: View {
                     PuzzleGameView(viewModel: viewModel)
                 }
             }
+            .navigationBarHidden(true)
+            .onAppear{
+                viewModel.checkIfAlreadySolved()
+                viewModel.loadPuzzle()
+            }
         }
     }
 }

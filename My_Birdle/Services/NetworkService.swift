@@ -78,7 +78,7 @@ class NetworkService {
     }
     // Fetch Bird Names
     func fetchBirdNames(completion: @escaping (Result<[String], Error>) -> Void){
-        guard let url = URL(string: "\(baseURL)?action=list") else {
+        guard let url = URL(string: "\(baseURL)action=list") else {
             completion(.failure(NetworkError.invalidURL))
             return
         }
@@ -181,7 +181,7 @@ class NetworkService {
         
         // Add bird_link
         body.append("--\(boundary)\r\n")
-        body.append("Content-Disposition: form-data; name=\"bird_link\"\r\n\r\n")
+        body.append("Content-Disposition: form-data; name=\"birdle_link\"\r\n\r\n")
         body.append("\(birdLink)\r\n")
         
         // Add image

@@ -15,7 +15,7 @@ class PuzzleViewModel: ObservableObject {
     @Published var hasStarted = false
     @Published var isCompleted = false
     @Published var isSuccess = false
-    @Published var isLoading = true
+    @Published var isLoading = false // for testing
     @Published var errorMessage: String?
     @Published var showIncorrectAlert = false
     @Published var alreadySolved = false
@@ -59,7 +59,7 @@ class PuzzleViewModel: ObservableObject {
     
     private var timer: Timer?
     private var startTime: Date?
-    private var images: [UIImage] = []
+    private var images: [UIImage?] = Array(repeating: nil, count: 6)
     
     // Initialisation
     init(){
@@ -80,7 +80,10 @@ class PuzzleViewModel: ObservableObject {
                 switch result {
                 case .success(let puzzle):
                     self?.puzzle = puzzle
-                    self?.loadImages()                case .failure:
+                    self?.loadImages()
+                case .failure:
+                    self?.isLoading = false
+                    self?.errorMessage = "Failed to load puzzle"
                     print("Failed to load puzzle")
                     return
                 }
@@ -117,6 +120,8 @@ class PuzzleViewModel: ObservableObject {
             "Australian White Ibis"
         ].sorted()
         
+        isLoading = false
+        
         // Also load from API to get any updates
         NetworkService.shared.fetchBirdNames { [weak self] result in
             if case .success(let names) = result {
@@ -134,11 +139,8 @@ class PuzzleViewModel: ObservableObject {
             return
         }
         
-//        // Load all 6 images
-//        for _ in 0..<6{
-//            images.append()
-//        }
         isLoading = false
+        
         // Download images
         for (index, urlString) in puzzle.imageURLs.enumerated() {
             NetworkService.shared.downloadImage(from: urlString) { [weak self] result in
@@ -171,7 +173,7 @@ class PuzzleViewModel: ObservableObject {
         stopTimer()
         isCompleted = true
         isSuccess = true
-        finalImage = images.last
+        finalImage = images[5]
         
         // Save to history
         if let puzzle = puzzle, let startTime = startTime {
@@ -200,7 +202,7 @@ class PuzzleViewModel: ObservableObject {
             stopTimer()
             isCompleted = true
             isSuccess = false
-            finalImage = images.last
+            finalImage = images[5]
             
             // Save to history (with max attempts)
             if let puzzle = puzzle, let startTime = startTime {
