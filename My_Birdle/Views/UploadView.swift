@@ -186,8 +186,44 @@ struct UploadView: View {
                         .cornerRadius(15)
                     }
                     .disabled(!isFormValid || isUploading)
+                    
+                    // Info notic
+                    HStack(alignment: .top, spacing: 10){
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(.blue)
+                        Text("By uploading, you confirm you have the rights to share this image under the selected license.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(10)
                 }
                 .padding()
+            }
+            .navigationTitle("Upload")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing){
+                    Button("Cancel"){
+                        dismiss()
+                    }
+                }
+            }
+            .sheet(isPresented: $showImagePicker){
+                ImagePicker(image: $selectedImage, sourceType: .photoLibrary)
+            }
+            .sheet(isPresented: $showCamera){
+                ImagePicker(image: $selectedImage, sourceType: .camera)
+            }
+            .alert(uploadSuccess ? "Success" : "Error", isPresented: $showAlert){
+                Button("OK"){
+                    if uploadSuccess {
+                        dismiss()
+                    }
+                }
+            } message: {
+                Text(uploadSuccess ? "Your bird photo has been uploaded successfully!" : errorMessage ?? "Upload failed")
             }
         }
     }

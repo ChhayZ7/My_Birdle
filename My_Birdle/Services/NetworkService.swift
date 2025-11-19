@@ -138,7 +138,7 @@ class NetworkService {
         birdLink: String,
         completion: @escaping (Result<Bool, Error>) -> Void
     ) {
-        guard let url = URL(string: baseURL) else {
+        guard let url = URL(string: "\(baseURL)action=upload") else {
             completion(.failure(NetworkError.invalidURL))
             return
         }
@@ -156,11 +156,6 @@ class NetworkService {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
         var body = Data()
-        
-        // Add action parameter
-        body.append("--\(boundary)\r\n")
-        body.append("Content-Disposition: form-data; name=\"action\"\r\n\r\n")
-        body.append("upload\r\n")
         
         // Add name
         body.append("--\(boundary)\r\n")
@@ -184,19 +179,28 @@ class NetworkService {
         
         // Add bird_link
         body.append("--\(boundary)\r\n")
-        body.append("Content-Disposition: form-data; name=\"birdle_link\"\r\n\r\n")
+        body.append("Content-Disposition: form-data; name=\"bird_link\"\r\n\r\n")
         body.append("\(birdLink)\r\n")
         
         // Add image
         body.append("--\(boundary)\r\n")
         body.append("Content-Disposition: form-data; name=\"image\"; filename=\"bird.jpg\"\r\n")
         body.append("Content-Type: image/jpeg\r\n\r\n")
-        body.append("\(imageData)\r\n")
+        body.append((imageData))
+        body.append("\r\n")
         
         // Close boundary
         body.append("--\(boundary)--\r\n")
         
         request.httpBody = body
+        
+        // Check if body contains actual image data (not text)
+        let bodyAsString = String(data: body.prefix(1000), encoding: .utf8) ?? ""
+        if bodyAsString.contains("bytes") {
+            print("⚠️ WARNING: Image might be text, not binary!")
+        } else {
+            print("✅ Image appears to be binary data")
+        }
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -208,6 +212,8 @@ class NetworkService {
                 completion(.failure(NetworkError.noData))
                 return
             }
+            
+            print("data: ", data)
             
             // Check for successs response
             if let successResponse = try? JSONDecoder().decode(APISuccessResponse.self, from: data),
