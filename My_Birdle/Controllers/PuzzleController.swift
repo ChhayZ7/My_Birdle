@@ -7,7 +7,7 @@
 import SwiftUI
 
 class PuzzleController: ObservableObject {
-    // Puzzle properties
+    // Puzzle state
     @Published var puzzle: BirdPuzzle?
     @Published var currentAttempt = 0
     @Published var currentGuess = ""
@@ -20,7 +20,7 @@ class PuzzleController: ObservableObject {
     @Published var showIncorrectAlert = false
     @Published var alreadySolved = false
     
-    // Practice mode variables
+    // Practice mode variables to bypass daily puzzle processes
     var isPracticeMode = false
     var practicePuzzleId: Int?
     
@@ -61,6 +61,7 @@ class PuzzleController: ObservableObject {
             """
     }
     
+    
     private var timer: Timer?
     private var startTime: Date?
     private var images: [UIImage?] = Array(repeating: nil, count: 6)
@@ -75,6 +76,7 @@ class PuzzleController: ObservableObject {
         self.practicePuzzleId = puzzleId
     }
     
+    // Check if user already completed today's daily puzzle
     func checkIfAlreadySolved(){
         alreadySolved = PersistenceController.shared.hasSolvedToday()
     }
@@ -82,7 +84,7 @@ class PuzzleController: ObservableObject {
     func loadPuzzle(){
         isLoading = true
         errorMessage = nil
-        // Load puzzle for practice mode
+        // Load  hardcoded puzzle for practice mode
         if isPracticeMode, let puzzleId = practicePuzzleId {
             NetworkService.shared.fetchPuzzle(id: puzzleId){ [weak self] result in
                 DispatchQueue.main.async{
@@ -131,7 +133,7 @@ class PuzzleController: ObservableObject {
         
         let guess = currentGuess.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Check if correct
+        // Check if correct (case-insensitive)
         if guess.lowercased() == puzzle?.name.lowercased() {
             handleCorrectGuess()
         } else {
@@ -140,7 +142,7 @@ class PuzzleController: ObservableObject {
     }
     
     private func loadBirdNames(){
-        // Also load from API to get any updates
+        // Fetch bird names for autocomplete
         NetworkService.shared.fetchBirdNames { [weak self] result in
             if case .success(let names) = result {
                 DispatchQueue.main.async{
@@ -159,7 +161,7 @@ class PuzzleController: ObservableObject {
         
         isLoading = false
         
-        // Download images
+        // Download all 6 progressive reveal images
         for (index, urlString) in puzzle.imageURLs.enumerated() {
             NetworkService.shared.downloadImage(from: urlString) { [weak self] result in
                 if case .success(let image) = result, index < 6
@@ -193,7 +195,7 @@ class PuzzleController: ObservableObject {
         isSuccess = true
         finalImage = images[5]
         
-        // Save to history
+        // Save result to Core Data history
         if let puzzle = puzzle, let startTime = startTime {
             let result = PuzzleResult(
                 birdName: puzzle.name,
@@ -222,7 +224,7 @@ class PuzzleController: ObservableObject {
             isSuccess = false
             finalImage = images[5]
             
-            // Save to history (with max attempts)
+            // Save failed attempt to history
             if let puzzle = puzzle, let startTime = startTime {
                 let result = PuzzleResult(
                     birdName: puzzle.name,
@@ -237,14 +239,14 @@ class PuzzleController: ObservableObject {
                 PersistenceController.shared.savePuzzleResult(result)
             }
         } else {
-                // Show next image
+                // Show next progressive image
                 currentAttempt += 1
                 loadNextImage()
                 showIncorrectAlert = true
         }
     }
         
-    
+    // Timer for tracking solve time
     private func startTimer(){
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true){ [weak self] _ in
             guard let startTime = self?.startTime else { return }

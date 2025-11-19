@@ -4,7 +4,7 @@
 //
 //  Created by KimChhay Leng on 11/11/2025.
 //
-// Core Data entity for puzzle history
+// Core Data entity for storing completed puzzle history
 
 import Foundation
 import CoreData

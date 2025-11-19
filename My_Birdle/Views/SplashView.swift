@@ -22,7 +22,7 @@ struct SplashView: View {
             ).ignoresSafeArea()
             
             VStack(spacing: 20){
-                // Bird icon
+                // Animated bird icon
                 Image(systemName: "bird.fill")
                     .resizable()
                     .scaledToFit()

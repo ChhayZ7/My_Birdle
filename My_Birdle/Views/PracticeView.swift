@@ -7,17 +7,13 @@
 
 import SwiftUI
 
-struct PracticePuzzle: Identifiable {
-    let id: Int
-    let name: String
-    let difficulty: String
-    let icon: String
-    let color: Color
-}
+
 struct PracticeView: View {
     @Environment(\.dismiss) var dismiss
     @State private var selectedPuzzle: PracticePuzzle?
     @State private var showPuzzle = false
+    
+    // 5 hardcoded practice puzzles (defined in NetworkService)
     let practicePuzzles = [
         PracticePuzzle(id: 1, name: "Puzzle 1", difficulty: "Easy", icon: "1.circle.fill", color: .green),
         PracticePuzzle(id: 2, name: "Puzzle 2", difficulty: "Easy", icon: "2.circle.fill", color: .green),
@@ -74,6 +70,7 @@ struct PracticeView: View {
                     }
                 }
             }
+            // Present selected puzzle
             .fullScreenCover(item: $selectedPuzzle) { puzzle in
                 PracticePuzzleView(puzzleId: puzzle.id)
             }
@@ -81,6 +78,7 @@ struct PracticeView: View {
     }
 }
 
+// Practice Puzzle Card
 struct PracticePuzzleCard: View {
     let puzzle: PracticePuzzle
     let action: () -> Void
@@ -122,7 +120,8 @@ struct PracticePuzzleCard: View {
     }
 }
 
-// Wrapper view for practice puzzles
+// Practice Puzzle View Wrapper
+// Wraps PuzzleView with practice mode enabled
 struct PracticePuzzleView: View {
     let puzzleId: Int
     @Environment(\.dismiss) var dismiss
@@ -130,6 +129,7 @@ struct PracticePuzzleView: View {
     
     init(puzzleId: Int) {
         self.puzzleId = puzzleId
+        // Initialise controller in practice mode
         _controller = StateObject(wrappedValue: PuzzleController(practiceMode: true, puzzleId: puzzleId))
     }
     
@@ -216,6 +216,7 @@ struct PracticeStartView: View {
 }
 
 // Practice Result View
+// Similar to daily result but allows retry
 struct PracticeResultView: View {
     @ObservedObject var controller: PuzzleController
     let dismiss: DismissAction
@@ -236,6 +237,7 @@ struct PracticeResultView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     
+                    // Practice mode badge
                     Text("Practice Mode")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -260,7 +262,7 @@ struct PracticeResultView: View {
                 }
                 .padding()
                 
-                // Final bird image
+                // Final bird image reveal
                 if let image = controller.finalImage {
                     VStack(alignment: .leading, spacing: 10) {
                         Image(uiImage: image)
@@ -316,7 +318,8 @@ struct PracticeResultView: View {
                     .padding(.horizontal)
                 }
                 
-                // Action buttons
+                // Practice mode actions
+                // Unlike daily mode, this allows retry
                 VStack(spacing: 15) {
                     Button(action: {
                         // Restart the same puzzle

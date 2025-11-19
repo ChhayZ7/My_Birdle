@@ -15,14 +15,16 @@ struct PuzzleGameView: View {
     var body: some View {
         ScrollView{
             VStack(spacing: 25){
-                // Attempt counter
+
                 HStack{
+                    // Attempt counter
                     Text("Attempt \(controller.currentAttempt) of 5")
                         .font(.headline)
                         .foregroundStyle(.secondary)
                     
                     Spacer()
                     
+                    // Live timer display
                     Text(controller.elapsedTimeString)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -31,6 +33,7 @@ struct PuzzleGameView: View {
                 .padding(.horizontal)
                 
                 // Bird image
+                // Shows increasingly clear images with each attempt
                 if let image = controller.currentImage {
                     Image(uiImage: image)
                         .resizable()
@@ -51,7 +54,7 @@ struct PuzzleGameView: View {
                         .padding(.horizontal)
                 }
                 
-                // Previous attempts
+                // Previous attempts display
                 if !controller.previousGuesses.isEmpty {
                     VStack(alignment: .leading, spacing: 10){
                         Text("Previous Guesses:")
@@ -74,7 +77,7 @@ struct PuzzleGameView: View {
                     .padding(.horizontal)
                 }
                 
-                // Guess input
+                // Guess input with autocomplete
                 VStack(spacing: 15){
                     TextField("Enter bird name...", text: $controller.currentGuess)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -83,7 +86,7 @@ struct PuzzleGameView: View {
                         .focused($isInputFocused)
                         .padding(.horizontal)
                     
-                    // Autocomplete suggestions
+                    // Autocomplete suggestions when typing
                     if !controller.filteredSuggestions.isEmpty && isInputFocused {
                         ScrollView {
                             VStack(spacing: 5){
@@ -139,6 +142,7 @@ struct PuzzleGameView: View {
 }
 
 // Result View
+// Shown after puzzle completion (success or failure)
 struct ResultView: View{
     @ObservedObject var controller: PuzzleController
     let dismiss: DismissAction
@@ -175,7 +179,7 @@ struct ResultView: View{
                 }
                 .padding()
                 
-                // Final bird image
+                // Final bird image reveal
                 if let image = controller.finalImage{
                     VStack(alignment: .leading, spacing: 10){
                         Image(uiImage: image)
@@ -211,6 +215,7 @@ struct ResultView: View{
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         
+                        // Link to Wikipedia article
                         Link(destination: URL(string: puzzle.bird_link ?? "https://wikipedia.org")!){
                             HStack {
                                 Image(systemName: "link.circle.fill")
@@ -270,6 +275,7 @@ struct ResultView: View{
 }
 
 // Share Sheet
+// Native iOS share functionality
 struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
     

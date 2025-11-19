@@ -32,6 +32,7 @@ struct HelpView: View {
                     Divider()
                     
                     // Instructions
+                    // Step-by-step gameplay guide
                     InstructionSection(
                         icon: "1.circle.fill",
                         title: "Start the Puzzle",
@@ -64,6 +65,7 @@ struct HelpView: View {
                     
                     Divider()
                     
+                    // Tips
                     VStack(alignment: .leading, spacing: 10){
                         Label("Tips", systemImage: "lightbulb.fill")
                             .font(.headline)

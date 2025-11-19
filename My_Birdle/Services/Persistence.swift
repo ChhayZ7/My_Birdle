@@ -13,9 +13,11 @@ struct PersistenceController {
     
     let container: NSPersistentContainer
     
+
     init(inMemory: Bool = false){
         container = NSPersistentContainer(name: "Birdle")
         
+        // Use in-memory store for testing/previews
         if inMemory{
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -26,9 +28,11 @@ struct PersistenceController {
             }
         }
         
+        // Aut0-merge changes from background context
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
     
+    // Save context
     func save(){
         let context = container.viewContext
         
@@ -41,7 +45,7 @@ struct PersistenceController {
         }
     }
     
-    // Save Puzzle Result
+    // Saves completed puzzle result to history
     func savePuzzleResult(_ result: PuzzleResult){
         let context = container.viewContext
         let history = PuzzleHistory(context: context)
@@ -59,6 +63,7 @@ struct PersistenceController {
         save()
     }
     
+    // Fetches all puzzle history, sorted by most recent first
     func fetchHistory() -> [PuzzleHistory]{
         let request: NSFetchRequest<PuzzleHistory> = PuzzleHistory.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \PuzzleHistory.completionDate, ascending: false)]
@@ -71,13 +76,14 @@ struct PersistenceController {
         }
     }
     
-    // Check if Puzzle Completed Today
+    // Checks if user has already completed today's puzzle (prevent multiple attempts per day)
     func hasSolvedToday() -> Bool{
         let request: NSFetchRequest<PuzzleHistory> = PuzzleHistory.fetchRequest()
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
         
+        // Query for puzzles completed between start of today and start of tomorrow
         request.predicate = NSPredicate(format: "completionDate >= %@ AND completionDate < %@", today as NSDate, tomorrow as NSDate)
         
         do {

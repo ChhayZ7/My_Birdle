@@ -12,6 +12,8 @@ struct HistoryView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) private var viewContext
     
+    // Core Data Fetch Request
+    // Automatically fetches and updates when data changes
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \PuzzleHistory.completionDate, ascending: false)],
         animation: .default)
@@ -73,6 +75,7 @@ struct EmptyHistoryView: View{
 }
 
 // History Card
+// Displays completed puzzle details
 struct HistoryCard: View {
     let item: PuzzleHistory
     @State private var image: UIImage?
@@ -180,6 +183,7 @@ struct HistoryCard: View {
         }
     }
     
+    // Image loading method
     private func loadImage() {
         guard let urlString = item.imageUrl else { return }
         
@@ -189,12 +193,13 @@ struct HistoryCard: View {
                 self.image = downloadedImage
                 }
             } else {
-                // Use placeholder
+                // Use placeholder if download fails
                 self.image = createPlaceholder()
             }
         }
     }
     
+    // Create placeholder bird icon
     private func createPlaceholder() -> UIImage {
         let size = CGSize(width: 400, height: 400)
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -223,6 +228,8 @@ struct HistoryCard: View {
     }
 }
 
+// Result badge
+// Shows success/failure status
 struct ResultBadge: View {
     let attempts: Int
     

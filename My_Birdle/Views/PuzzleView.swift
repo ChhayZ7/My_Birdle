@@ -18,6 +18,7 @@ struct PuzzleView: View {
                 Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
                 
+                // Shows different views based on puzzle state
                 if viewModel.isLoading {
                     LoadingView()
                 } else if let error = viewModel.errorMessage {
@@ -25,6 +26,7 @@ struct PuzzleView: View {
                         viewModel.loadPuzzle()
                     }
                 } else if viewModel.alreadySolved {
+                    // Prevent multiple daily attempts
                     AlreadySolvedView(dismiss: dismiss)
                 } else if !viewModel.hasStarted {
                     StartView {
@@ -36,6 +38,7 @@ struct PuzzleView: View {
                         dismiss: dismiss
                         )
                 } else {
+                    // Active gameplay
                     PuzzleGameView(controller: viewModel)
                 }
             }
@@ -48,7 +51,7 @@ struct PuzzleView: View {
     }
 }
 
-// Start View
+// Initial screen before puzzle begins
 struct StartView: View {
     let onStart: () -> Void
     
@@ -88,7 +91,7 @@ struct StartView: View {
     }
 }
 
-// Already Solved View
+// Shown when user tries to play daily puzzle twice
 struct AlreadySolvedView: View {
     let dismiss: DismissAction
     

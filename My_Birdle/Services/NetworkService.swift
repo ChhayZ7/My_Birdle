@@ -60,6 +60,7 @@ class NetworkService {
     
     private init(){}
     
+    // Fetces today's puzzle from the API
     func fetchDailyPuzzle(completion: @escaping (Result<BirdPuzzle, Error>) -> Void) {
         guard let url = URL(string: baseURL) else {
             completion(.failure(NetworkError.invalidURL))
@@ -90,7 +91,7 @@ class NetworkService {
         }.resume()
     }
     
-    // Fetch Hardcoded Puzzle
+    // Fetch Hardcoded Puzzle puzzle by ID (1-5)
     func fetchPuzzle(id: Int, completion: @escaping (Result<BirdPuzzle, Error>) -> Void){
         // Check if this is a practice puzzle (ID 1-5)
         if let practicePuzzle = practicePuzzles[id] {
@@ -101,7 +102,8 @@ class NetworkService {
             return
         }
     }
-    // Fetch Bird Names
+    
+    // Fetches list of all bird names for autocomplete
     func fetchBirdNames(completion: @escaping (Result<[String], Error>) -> Void){
         guard let url = URL(string: "\(baseURL)action=list") else {
             completion(.failure(NetworkError.invalidURL))
@@ -151,6 +153,7 @@ class NetworkService {
     }
     
     // Upload Bird Image
+    // Uploades user-submitted bird photo to server using multipart form data
     func uploadBirdImage(
         name: String,
         image: UIImage,
@@ -165,13 +168,13 @@ class NetworkService {
             return
         }
         
-        // Convert image to JPEG data
+        // Convert image to JPEG with compression
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             completion(.failure(NetworkError.invalidImageData))
             return
         }
         
-        // Create multipart form data
+        // Create multipart form data request
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -216,14 +219,6 @@ class NetworkService {
         
         request.httpBody = body
         
-        // Check if body contains actual image data (not text)
-        let bodyAsString = String(data: body.prefix(1000), encoding: .utf8) ?? ""
-        if bodyAsString.contains("bytes") {
-            print("⚠️ WARNING: Image might be text, not binary!")
-        } else {
-            print("✅ Image appears to be binary data")
-        }
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -250,6 +245,7 @@ class NetworkService {
 }
 
 // Data Extension
+// Helper to append strings to Data for multipart form
 extension Data {
     mutating func append(_ string: String){
         if let data = string.data(using: .utf8){
@@ -258,6 +254,7 @@ extension Data {
     }
 }
 
+// Network Errors
 enum NetworkError: LocalizedError {
     case invalidURL
     case noData

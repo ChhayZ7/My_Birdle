@@ -11,6 +11,7 @@ import PhotosUI
 struct UploadView: View {
     @Environment(\.dismiss) var dismiss
     
+    // Form state
     @State private var birdName = ""
     @State private var photographer = ""
     @State private var selectedLicense = ImageLicense.ccBy
@@ -24,6 +25,7 @@ struct UploadView: View {
     @State private var errorMessage: String?
     @State private var showAlert = false
     
+    // Form validation
     var isFormValid: Bool {
         !birdName.isEmpty &&
         !photographer.isEmpty &&
@@ -70,6 +72,7 @@ struct UploadView: View {
                                     .frame(height: 200)
                                     .cornerRadius(15)
                                 
+                                // Remove button
                                 Button(action: {
                                     selectedImage = nil
                                 }) {
@@ -82,6 +85,7 @@ struct UploadView: View {
                                 .padding(10)
                             }
                         } else {
+                            // Image source options
                             VStack(spacing: 15){
                                 Button(action: {
                                     showImagePicker = true
@@ -135,6 +139,7 @@ struct UploadView: View {
                             text: $photographer
                         )
                         
+                        // License picker
                         VStack(alignment: .leading, spacing: 8){
                             Label("license", systemImage: "doc.text.fill")
                                 .font(.headline)
@@ -187,7 +192,7 @@ struct UploadView: View {
                     }
                     .disabled(!isFormValid || isUploading)
                     
-                    // Info notic
+                    // Disclaimer notice
                     HStack(alignment: .top, spacing: 10){
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.blue)
@@ -228,6 +233,7 @@ struct UploadView: View {
         }
     }
     
+    // Upload function
     private func uploadBird() {
         guard let image = selectedImage else {
             return
@@ -282,6 +288,7 @@ struct FormField: View {
 }
 
 // Image Picker
+// UIKit wrapper for photo/camera selection
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
     @Environment(\.dismiss) var dismiss

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainMenuView: View {
+    // Navigation state for each menu option
     @State private var showPuzzle = false
     @State private var showPractice = false
     @State private var showHelp = false
@@ -18,6 +19,7 @@ struct MainMenuView: View {
     var body: some View {
         NavigationView {
             ZStack {
+                // Background gradient
                 LinearGradient(
                     gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.2)]),
                 startPoint: .topLeading,
@@ -47,6 +49,7 @@ struct MainMenuView: View {
                     
                     // Menu bottons
                     VStack(spacing: 20){
+                        // Daily puzzle button - main game mode
                         MenuButton(
                             title: "Start Puzzle",
                             icon: "play.circle.fill",
@@ -56,6 +59,7 @@ struct MainMenuView: View {
                             showPuzzle = true
                         }
                         
+                        // Practice mode button
                         MenuButton(
                             title: "Practice",
                             icon: "gamecontroller.fill",
@@ -64,6 +68,7 @@ struct MainMenuView: View {
                             showPractice = true
                         }
                         
+                        // Upload bird button
                         MenuButton(
                             title: "Upload Bird",
                             icon: "square.and.arrow.up.circle.fill",
@@ -72,6 +77,7 @@ struct MainMenuView: View {
                             showUpload = true
                         }
                         
+                        // Core Data puzzle history button
                         MenuButton(
                             title: "History",
                             icon: "clock.fill",
@@ -80,6 +86,7 @@ struct MainMenuView: View {
                             showHistory = true
                         }
                         
+                        // Game instruction/guide button
                         MenuButton(
                             title: "Help",
                             icon: "questionmark.circle.fill",
@@ -88,6 +95,7 @@ struct MainMenuView: View {
                             showHelp = true
                         }
                         
+                        // Game detail button
                         MenuButton(
                             title: "About",
                             icon: "info.circle.fill",
@@ -102,12 +110,14 @@ struct MainMenuView: View {
                 }
             }
             .navigationBarHidden(true)
+            // fullScreenCover for game modes
             .fullScreenCover(isPresented: $showPuzzle){
                 PuzzleView()
             }
             .fullScreenCover(isPresented: $showPractice){
                 PracticeView()
             }
+            // sheet for informational/utility screens
             .sheet(isPresented: $showHelp){
                  HelpView()
             }
@@ -124,6 +134,7 @@ struct MainMenuView: View {
     }
 }
 
+// Reusable button with icon, title, color, and action
 struct MenuButton: View {
     let title: String
     let icon: String

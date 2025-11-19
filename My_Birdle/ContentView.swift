@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var showSplash = true
     var body: some View {
         Group {
+            // Show splash screen on app launch, then transition to main menu
             if showSplash {
                 SplashView(showSplash: $showSplash)
             } else {

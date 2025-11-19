@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 
+// Main puzzle model returned from API
 struct BirdPuzzle: Codable, Identifiable {
     let name: String
     let image: String // 4-digit code like "0008"
@@ -28,6 +30,15 @@ struct BirdPuzzle: Codable, Identifiable {
     var finalImageURL: String {
         "https://easterbilby.net/birdle/\(image)5.jpg"
     }
+}
+
+// Practice Puzzle Model
+struct PracticePuzzle: Identifiable {
+    let id: Int
+    let name: String
+    let difficulty: String
+    let icon: String
+    let color: Color
 }
 
 // Bird Names List Response

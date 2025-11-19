@@ -14,7 +14,7 @@ struct AboutView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 30) {
-                    // App icon and name
+                    // App Header
                     VStack(spacing: 15){
                         Image(systemName: "bird.circle.fill")
                             .resizable()
@@ -77,6 +77,7 @@ struct AboutView: View {
                     .cornerRadius(15)
                     
                     // Disclaimer
+                    // Educational use and attribution
                     VStack(alignment: .leading, spacing: 15){
                         SectionHeader(title: "Disclaimer")
                         
