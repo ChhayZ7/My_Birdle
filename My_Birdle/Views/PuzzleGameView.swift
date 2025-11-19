@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PuzzleGameView: View {
-    @ObservedObject var viewModel: PuzzleController
+    @ObservedObject var controller: PuzzleController
     @FocusState private var isInputFocused: Bool
     
     var body: some View {
@@ -17,13 +17,13 @@ struct PuzzleGameView: View {
             VStack(spacing: 25){
                 // Attempt counter
                 HStack{
-                    Text("Attempt \(viewModel.currentAttempt) of 5")
+                    Text("Attempt \(controller.currentAttempt) of 5")
                         .font(.headline)
                         .foregroundStyle(.secondary)
                     
                     Spacer()
                     
-                    Text(viewModel.elapsedTimeString)
+                    Text(controller.elapsedTimeString)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
@@ -31,7 +31,7 @@ struct PuzzleGameView: View {
                 .padding(.horizontal)
                 
                 // Bird image
-                if let image = viewModel.currentImage {
+                if let image = controller.currentImage {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
@@ -52,13 +52,13 @@ struct PuzzleGameView: View {
                 }
                 
                 // Previous attempts
-                if !viewModel.previousGuesses.isEmpty {
+                if !controller.previousGuesses.isEmpty {
                     VStack(alignment: .leading, spacing: 10){
                         Text("Previous Guesses:")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         
-                        ForEach(viewModel.previousGuesses, id: \.self){ guess in
+                        ForEach(controller.previousGuesses, id: \.self){ guess in
                             HStack {
                                 Image(systemName: "xmark.circle.fill")
                                     .foregroundStyle(.red)
@@ -76,7 +76,7 @@ struct PuzzleGameView: View {
                 
                 // Guess input
                 VStack(spacing: 15){
-                    TextField("Enter bird name...", text: $viewModel.currentGuess)
+                    TextField("Enter bird name...", text: $controller.currentGuess)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.words)
                         .disableAutocorrection(true)
@@ -84,13 +84,13 @@ struct PuzzleGameView: View {
                         .padding(.horizontal)
                     
                     // Autocomplete suggestions
-                    if !viewModel.filteredSuggestions.isEmpty && isInputFocused {
+                    if !controller.filteredSuggestions.isEmpty && isInputFocused {
                         ScrollView {
                             VStack(spacing: 5){
-                                ForEach(viewModel.filteredSuggestions.prefix(5), id: \.self) {
+                                ForEach(controller.filteredSuggestions.prefix(5), id: \.self) {
                                     suggestion in
                                     Button(action: {
-                                        viewModel.currentGuess = suggestion
+                                        controller.currentGuess = suggestion
                                         isInputFocused = false
                                     }) {
                                         HStack {
@@ -112,7 +112,7 @@ struct PuzzleGameView: View {
                     }
                     
                     Button(action: {
-                        viewModel.submitGuess()
+                        controller.submitGuess()
                         isInputFocused = false
                     }) {
                         Text("Submit Guess")
@@ -120,17 +120,17 @@ struct PuzzleGameView: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(viewModel.currentGuess.isEmpty ? Color.gray : Color.blue)
+                            .background(controller.currentGuess.isEmpty ? Color.gray : Color.blue)
                             .cornerRadius(12)
                     }
-                    .disabled(viewModel.currentGuess.isEmpty)
+                    .disabled(controller.currentGuess.isEmpty)
                     .padding(.horizontal)
                 }
                 Spacer()
             }
             .padding(.vertical)
         }
-        .alert("Incorrect!", isPresented: $viewModel.showIncorrectAlert){
+        .alert("Incorrect!", isPresented: $controller.showIncorrectAlert){
             Button("OK", role: .cancel) {}
         } message: {
             Text("That's not quite right. Try again!")
@@ -281,5 +281,5 @@ struct ShareSheet: UIViewControllerRepresentable {
 }
 
 #Preview {
-    PuzzleGameView(viewModel: PuzzleController())
+    PuzzleGameView(controller: PuzzleController())
 }

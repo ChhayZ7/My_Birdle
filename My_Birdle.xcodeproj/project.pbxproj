@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3894FA842EBB56D9004AB953 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 3894FA832EBB56D1004AB953 /* .gitignore */; };
+		389C0DF52ECD9BA4002853A0 /* documentation.md in Resources */ = {isa = PBXBuildFile; fileRef = 389C0DF42ECD9B9D002853A0 /* documentation.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		3894FA622EBB4B59004AB953 /* My_BirdleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = My_BirdleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3894FA6C2EBB4B59004AB953 /* My_BirdleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = My_BirdleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3894FA832EBB56D1004AB953 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		389C0DF42ECD9B9D002853A0 /* documentation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = documentation.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -80,6 +82,7 @@
 		3894FA4C2EBB4B57004AB953 = {
 			isa = PBXGroup;
 			children = (
+				389C0DF42ECD9B9D002853A0 /* documentation.md */,
 				3894FA832EBB56D1004AB953 /* .gitignore */,
 				3894FA572EBB4B57004AB953 /* My_Birdle */,
 				3894FA652EBB4B59004AB953 /* My_BirdleTests */,
@@ -218,6 +221,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				389C0DF52ECD9BA4002853A0 /* documentation.md in Resources */,
 				3894FA842EBB56D9004AB953 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

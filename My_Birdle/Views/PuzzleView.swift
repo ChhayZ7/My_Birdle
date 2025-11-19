@@ -36,7 +36,7 @@ struct PuzzleView: View {
                         dismiss: dismiss
                         )
                 } else {
-                    PuzzleGameView(viewModel: viewModel)
+                    PuzzleGameView(controller: viewModel)
                 }
             }
             .navigationBarHidden(true)

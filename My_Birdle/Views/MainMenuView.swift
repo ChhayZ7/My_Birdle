@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainMenuView: View {
     @State private var showPuzzle = false
+    @State private var showPractice = false
     @State private var showHelp = false
     @State private var showHistory = false
     @State private var showUpload = false
@@ -56,6 +57,14 @@ struct MainMenuView: View {
                         }
                         
                         MenuButton(
+                            title: "Practice",
+                            icon: "gamecontroller.fill",
+                            color: .blue
+                        ){
+                            showPractice = true
+                        }
+                        
+                        MenuButton(
                             title: "Upload Bird",
                             icon: "square.and.arrow.up.circle.fill",
                             color: .purple
@@ -95,6 +104,9 @@ struct MainMenuView: View {
             .navigationBarHidden(true)
             .fullScreenCover(isPresented: $showPuzzle){
                 PuzzleView()
+            }
+            .fullScreenCover(isPresented: $showPractice){
+                PracticeView()
             }
             .sheet(isPresented: $showHelp){
                  HelpView()

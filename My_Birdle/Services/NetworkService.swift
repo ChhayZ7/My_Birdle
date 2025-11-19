@@ -14,6 +14,50 @@ class NetworkService {
     private let baseURL = "https://easterbilby.net/birdle/api.php?"
     private let imageBaseURL = "https://easterbilby.net/birdle/"
     
+    // Hardcoded practice puzzles
+    private let practicePuzzles: [Int: BirdPuzzle] = [
+        1: BirdPuzzle(
+            name:"Australian Magpie",
+            image:"0002",
+            photographer:"Aviceda",
+            license:"Creative Commons Attribution-Share Alike 3.0 Unported",
+            photographer_link:"https://commons.wikimedia.org/wiki/User:Aviceda",
+            bird_link:"https://en.wikipedia.org/wiki/Australian_magpie"
+        ),
+        2: BirdPuzzle(
+            name:"Black Swan",
+            image:"0009",
+            photographer:"Charles J. Sharp ",
+            license:"Creative Commons Attribution-Share Alike 4.0 International ",
+            photographer_link:"https://www.wikidata.org/wiki/Q54800218",
+            bird_link:"https://en.wikipedia.org/wiki/Black_swan"
+        ),
+        3: BirdPuzzle(
+            name:"Emu",
+            image:"0004",
+            photographer:"JJ Harrison",
+            license:"Creative Commons Attribution-Share Alike 4.0 International",
+            photographer_link:"https://en.wikipedia.org/wiki/User:JJ_Harrison",
+            bird_link:"https://en.wikipedia.org/wiki/Emu"
+        ),
+        4: BirdPuzzle(
+            name:"Noisy Miner",
+            image:"0005",
+            photographer:"JJ Harrison",
+            license:"Creative Commons Attribution-Share Alike 3.0 Unported",
+            photographer_link:"https://en.wikipedia.org/wiki/User:JJ_Harrison",
+            bird_link:"https://en.wikipedia.org/wiki/Noisy_miner"
+        ),
+        5: BirdPuzzle(
+            name:"Galah",
+            image:"0006",
+            photographer:"Charles J. Sharp ",
+            license:"Creative Commons Attribution-Share Alike 4.0 International ",
+            photographer_link:"https://www.wikidata.org/wiki/Q54800218",
+            bird_link:"https://en.wikipedia.org/wiki/Galah" 
+        )
+    ]
+    
     private init(){}
     
     func fetchDailyPuzzle(completion: @escaping (Result<BirdPuzzle, Error>) -> Void) {
@@ -46,38 +90,16 @@ class NetworkService {
         }.resume()
     }
     
-    // Fetch Specific Puzzle
+    // Fetch Hardcoded Puzzle
     func fetchPuzzle(id: Int, completion: @escaping (Result<BirdPuzzle, Error>) -> Void){
-        guard let url = URL(string: "\(baseURL)action=download&id=\(id)") else {
-            completion(.failure(NetworkError.invalidURL))
+        // Check if this is a practice puzzle (ID 1-5)
+        if let practicePuzzle = practicePuzzles[id] {
+            // Simulate network delay for realistic experience
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                completion(.success(practicePuzzle))
+            }
             return
         }
-        
-        URLSession.shared.dataTask(with: url){ data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            do {
-                // Check for error response first
-                if let errorResponse = try? JSONDecoder().decode(APIErrorResponse.self, from: data),
-                   errorResponse.result == "error" {
-                    completion(.failure(NetworkError.serverError))
-                    return
-                }
-                
-                let puzzle = try JSONDecoder().decode(BirdPuzzle.self, from: data)
-                completion(.success(puzzle))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
     }
     // Fetch Bird Names
     func fetchBirdNames(completion: @escaping (Result<[String], Error>) -> Void){

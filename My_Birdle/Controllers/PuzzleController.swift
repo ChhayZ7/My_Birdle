@@ -20,6 +20,10 @@ class PuzzleController: ObservableObject {
     @Published var showIncorrectAlert = false
     @Published var alreadySolved = false
     
+    // Practice mode variables
+    var isPracticeMode = false
+    var practicePuzzleId: Int?
+    
     @Published var currentImage: UIImage?
     @Published var finalImage: UIImage?
     @Published var elapsedTime: TimeInterval = 0
@@ -65,6 +69,11 @@ class PuzzleController: ObservableObject {
     init(){
         loadBirdNames()
     }
+    convenience init(practiceMode: Bool, puzzleId: Int?){
+        self.init()
+        self.isPracticeMode = practiceMode
+        self.practicePuzzleId = puzzleId
+    }
     
     func checkIfAlreadySolved(){
         alreadySolved = PersistenceController.shared.hasSolvedToday()
@@ -73,19 +82,37 @@ class PuzzleController: ObservableObject {
     func loadPuzzle(){
         isLoading = true
         errorMessage = nil
-        
-        // Try to load from API
-        NetworkService.shared.fetchDailyPuzzle { [weak self] result in
-            DispatchQueue.main.async{
-                switch result {
-                case .success(let puzzle):
-                    self?.puzzle = puzzle
-                    self?.loadImages()
-                case .failure:
-                    self?.isLoading = false
-                    self?.errorMessage = "Failed to load puzzle"
-                    print("Failed to load puzzle")
-                    return
+        // Load puzzle for practice mode
+        if isPracticeMode, let puzzleId = practicePuzzleId {
+            NetworkService.shared.fetchPuzzle(id: puzzleId){ [weak self] result in
+                DispatchQueue.main.async{
+                    switch result {
+                    case .success(let puzzle):
+                        self?.puzzle = puzzle
+                        self?.loadImages()
+                    case .failure:
+                        self?.isLoading = false
+                        self?.errorMessage = "Failed to lead practice puzzle"
+                        print("Failed to lead practice puzzle")
+                        return
+                    }
+                }
+            }
+        }  else {
+            
+            // Load daily puzzle from API
+            NetworkService.shared.fetchDailyPuzzle { [weak self] result in
+                DispatchQueue.main.async{
+                    switch result {
+                    case .success(let puzzle):
+                        self?.puzzle = puzzle
+                        self?.loadImages()
+                    case .failure:
+                        self?.isLoading = false
+                        self?.errorMessage = "Failed to load puzzle"
+                        print("Failed to load puzzle")
+                        return
+                    }
                 }
             }
         }
@@ -113,14 +140,6 @@ class PuzzleController: ObservableObject {
     }
     
     private func loadBirdNames(){
-        // Hardcoded bird names matching the API
-        birdNames = [
-            "Tawny Frogmouth",
-            "Australian Magpie",
-            "Australian White Ibis"
-        ].sorted()
-        
-        
         // Also load from API to get any updates
         NetworkService.shared.fetchBirdNames { [weak self] result in
             if case .success(let names) = result {

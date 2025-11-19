@@ -39,8 +39,8 @@ struct AboutView: View {
                         
                         FeatureRow(
                             icon: "puzzlepiece.fill",
-                            title: "Daily Puzzle",
-                            description: "Guess a new bird every day")
+                            title: "Daily & Practice Puzzle",
+                            description: "Practice or Guess a new bird every day")
                         
                         FeatureRow(
                             icon: "clock.fill",
@@ -169,6 +169,9 @@ struct FeatureRow: View{
             VStack(alignment: .leading, spacing: 4){
                 Text(title)
                     .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(description)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
