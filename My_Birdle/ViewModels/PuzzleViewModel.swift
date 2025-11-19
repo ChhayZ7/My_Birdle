@@ -15,7 +15,7 @@ class PuzzleViewModel: ObservableObject {
     @Published var hasStarted = false
     @Published var isCompleted = false
     @Published var isSuccess = false
-    @Published var isLoading = false // for testing
+    @Published var isLoading = true
     @Published var errorMessage: String?
     @Published var showIncorrectAlert = false
     @Published var alreadySolved = false
@@ -120,7 +120,6 @@ class PuzzleViewModel: ObservableObject {
             "Australian White Ibis"
         ].sorted()
         
-        isLoading = false
         
         // Also load from API to get any updates
         NetworkService.shared.fetchBirdNames { [weak self] result in
@@ -185,7 +184,7 @@ class PuzzleViewModel: ObservableObject {
                 imageUrl: puzzle.finalImageURL,
                 photographer: puzzle.photographer,
                 license: puzzle.license,
-                wikiLink: puzzle.birdURL
+                wikiLink: puzzle.bird_link
             )
             PersistenceController.shared.savePuzzleResult(result)
         }
@@ -214,7 +213,7 @@ class PuzzleViewModel: ObservableObject {
                     imageUrl: puzzle.finalImageURL,
                     photographer: puzzle.photographer,
                     license: puzzle.license,
-                    wikiLink: puzzle.birdURL
+                    wikiLink: puzzle.bird_link
                 )
                 PersistenceController.shared.savePuzzleResult(result)
             }

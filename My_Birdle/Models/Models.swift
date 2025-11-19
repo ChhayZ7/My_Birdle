@@ -12,8 +12,8 @@ struct BirdPuzzle: Codable, Identifiable {
     let image: String // 4-digit code like "0008"
     let photographer: String
     let license: String
-    let photographerURL: String
-    let birdURL: String
+    let photographer_link: String
+    let bird_link: String
     
     var id: String { image } // Use image code as ID
     
@@ -22,8 +22,8 @@ struct BirdPuzzle: Codable, Identifiable {
         case image
         case photographer
         case license
-        case photographerURL = "photographer_url"
-        case birdURL = "bird_url"
+        case photographer_link = "photographer_url"
+        case bird_link = "bird_url"
     }
     
     // Generate image URLs from the 4-digit code

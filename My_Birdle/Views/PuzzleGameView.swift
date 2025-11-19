@@ -211,7 +211,7 @@ struct ResultView: View{
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         
-                        Link(destination: URL(string: puzzle.birdURL) ?? URL(string: "https://wikipedia.org")!){
+                        Link(destination: URL(string: puzzle.bird_link) ?? URL(string: "https://wikipedia.org")!){
                             HStack {
                                 Image(systemName: "link.circle.fill")
                                 Text("Learn More")
