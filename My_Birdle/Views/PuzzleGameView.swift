@@ -211,7 +211,7 @@ struct ResultView: View{
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         
-                        Link(destination: URL(string: puzzle.bird_link) ?? URL(string: "https://wikipedia.org")!){
+                        Link(destination: URL(string: puzzle.bird_link ?? "https://wikipedia.org")!){
                             HStack {
                                 Image(systemName: "link.circle.fill")
                                 Text("Learn More")
@@ -246,7 +246,7 @@ struct ResultView: View{
                         .cornerRadius(12)
                     }
                 }
-                .padding(.vertical)
+                .padding()
             }
             .sheet(isPresented: $showShareSheet){
                 ShareSheet(activityItems: [viewModel.shareText])

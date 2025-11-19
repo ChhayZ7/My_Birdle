@@ -36,9 +36,8 @@ class NetworkService {
                 completion(.failure(NetworkError.noData))
                 return
             }
-            
+            print("API Response", String(data: data, encoding: .utf8) ?? "nil")
             do {
-                print(data)
                 let puzzle = try JSONDecoder().decode(BirdPuzzle.self, from: data)
                 completion(.success(puzzle))
             } catch {
