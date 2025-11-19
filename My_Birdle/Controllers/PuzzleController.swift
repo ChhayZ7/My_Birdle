@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-class PuzzleViewModel: ObservableObject {
+class PuzzleController: ObservableObject {
     // Puzzle properties
     @Published var puzzle: BirdPuzzle?
     @Published var currentAttempt = 0

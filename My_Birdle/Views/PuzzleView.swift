@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PuzzleView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel = PuzzleViewModel()
+    @StateObject private var viewModel = PuzzleController()
 
     var body: some View {
         NavigationView {
@@ -32,7 +32,7 @@ struct PuzzleView: View {
                 }
                 } else if viewModel.isCompleted{
                     ResultView(
-                        viewModel: viewModel,
+                        controller: viewModel,
                         dismiss: dismiss
                         )
                 } else {

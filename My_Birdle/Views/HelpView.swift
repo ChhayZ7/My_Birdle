@@ -52,7 +52,7 @@ struct HelpView: View {
                     
                     InstructionSection(
                         icon: "4.circle.fill",
-                        title: "Gte Feedback",
+                        title: "Get Feedback",
                         description: "If you're correct, you win! If not, you'll see the next image. You have up to 5 attempts."
                         )
 

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PuzzleGameView: View {
-    @ObservedObject var viewModel: PuzzleViewModel
+    @ObservedObject var viewModel: PuzzleController
     @FocusState private var isInputFocused: Bool
     
     var body: some View {
@@ -140,7 +140,7 @@ struct PuzzleGameView: View {
 
 // Result View
 struct ResultView: View{
-    @ObservedObject var viewModel: PuzzleViewModel
+    @ObservedObject var controller: PuzzleController
     let dismiss: DismissAction
     @State private var showShareSheet = false
     
@@ -149,18 +149,18 @@ struct ResultView: View{
             VStack(spacing: 25){
                 // Success/Failure header
                 VStack(spacing: 15){
-                    Image(systemName: viewModel.isSuccess ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    Image(systemName: controller.isSuccess ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 80, height: 80)
-                        .foregroundStyle(viewModel.isSuccess ? .green : .orange)
+                        .foregroundStyle(controller.isSuccess ? .green : .orange)
                     
-                    Text(viewModel.isSuccess ? "Congratulations!" : "Better Luck Next Time!")
+                    Text(controller.isSuccess ? "Congratulations!" : "Better Luck Next Time!")
                         .font(.title)
                         .fontWeight(.bold)
                     
-                    if viewModel.isSuccess {
-                        Text("You guessed it in \(viewModel.currentAttempt) \(viewModel.currentAttempt == 1 ? "try" : "tries")!")
+                    if controller.isSuccess {
+                        Text("You guessed it in \(controller.currentAttempt) \(controller.currentAttempt == 1 ? "try" : "tries")!")
                             .font(.headline)
                             .foregroundStyle(.secondary)
                     } else {
@@ -169,14 +169,14 @@ struct ResultView: View{
                             .foregroundStyle(.secondary)
                     }
                     
-                    Text("Time: \(viewModel.elapsedTimeString)")
+                    Text("Time: \(controller.elapsedTimeString)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .padding()
                 
                 // Final bird image
-                if let image = viewModel.finalImage{
+                if let image = controller.finalImage{
                     VStack(alignment: .leading, spacing: 10){
                         Image(uiImage: image)
                             .resizable()
@@ -185,11 +185,11 @@ struct ResultView: View{
                             .cornerRadius(15)
                             .shadow(radius: 5)
                         
-                        Text(viewModel.puzzle?.photographer ?? "Unknown")
+                        Text(controller.puzzle?.photographer ?? "Unknown")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         
-                        Text(viewModel.puzzle?.license ?? "")
+                        Text(controller.puzzle?.license ?? "")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -197,7 +197,7 @@ struct ResultView: View{
                 }
                 
                 // Bird information
-                if let puzzle = viewModel.puzzle{
+                if let puzzle = controller.puzzle{
                     VStack(alignment: .leading, spacing: 15) {
                         Text(puzzle.name)
                             .font(.title2)
@@ -245,11 +245,25 @@ struct ResultView: View{
                         .background(Color.blue)
                         .cornerRadius(12)
                     }
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "house.fill")
+                            Text("Back to Menu")
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(12)
+                    }
                 }
                 .padding()
             }
             .sheet(isPresented: $showShareSheet){
-                ShareSheet(activityItems: [viewModel.shareText])
+                ShareSheet(activityItems: [controller.shareText])
             }
         }
     }
@@ -267,5 +281,5 @@ struct ShareSheet: UIViewControllerRepresentable {
 }
 
 #Preview {
-    PuzzleGameView(viewModel: PuzzleViewModel())
+    PuzzleGameView(viewModel: PuzzleController())
 }
